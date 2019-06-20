@@ -67,7 +67,7 @@
 (make-face 'mode-line-80col-face)
 
 (set-face-attribute 'mode-line nil
-                    :foreground "gray60" :background "black" :height 75)
+                    :foreground "gray60" :background "black" :height 100)
 
 (set-face-attribute 'mode-line-inactive nil
     :foreground "gray80" :background "black"
@@ -92,11 +92,11 @@
 (set-face-attribute 'mode-line-filename-face nil
     :inherit 'mode-line-face
     :foreground "#eab700" :background "black"
-    :weight 'bold :height 90)
+    :weight 'bold :height 110)
 
 (set-face-attribute 'mode-line-position-face nil
     :inherit 'mode-line-face
-    :family "Menlo" :height 90)
+    :family "Menlo" :height 110)
 
 (set-face-attribute 'mode-line-mode-face nil
     :inherit 'mode-line-face
@@ -105,7 +105,7 @@
 (set-face-attribute 'mode-line-minor-mode-face nil
     :inherit 'mode-line-mode-face
     :foreground "gray40" :background "black"
-    :height 70)
+    :height 90)
 
 (set-face-attribute 'mode-line-process-face nil
     :inherit 'mode-line-face

@@ -3,7 +3,7 @@
 
 (custom-theme-set-faces
  'mytheme
- '(default ((t (:family "Menlo" :foundry "unknown" :width normal :height 90 :weight normal :slant normal :underline nil :overline nil :strike-through nil :box nil :inverse-video nil :foreground "white" :background "black" :stipple nil :inherit nil))))
+ '(default ((t (:family "Menlo" :foundry "unknown" :width normal :height 160 :weight normal :slant normal :underline nil :overline nil :strike-through nil :box nil :inverse-video nil :foreground "white" :background "black" :stipple nil :inherit nil))))
  '(cursor ((t (:background "#fce94f"))))
  '(fixed-pitch ((t (:family "Monospace"))))
  '(variable-pitch ((t (:family "Sans Serif"))))
