@@ -28,7 +28,7 @@
 ;; Set up our package locations
 ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("gnu" . "https://elpa.gnu.org/packages/")))
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Taken from config at
@@ -58,22 +58,27 @@
 ;; Change the default garbage collection threshold during startup
 ;; Then put it back to something small after we start so that we areen't
 ;;  garbage collecting so much during startup
-(setq gc-cons-threshold 64000000)
+(setq gc-cons-threshold 128000000)
 (add-hook 'after-init-hook #'(lambda ()
-			       (setq gc-cons-threshold 1000000)))
+                               (setq gc-cons-threshold 1000000)))
 
 (show-paren-mode t)               ; Highlight matching braces
 (delete-selection-mode t)         ; overwrite the selected section on edit
 (setq column-number-mode t)       ; Show column numbers
 (setq make-backup-files nil)      ; don't make backup files
 (setq-default case-fold-search t  ; Case insensitive search by default
-	      search-highlight t) ; highlight all matches
+              search-highlight t) ; highlight all matches
 (global-hl-line-mode t)           ; Highlight the current line
+
+;; Tab handling
+(setq-default indent-tabs-mode nil) ; tabs instead of spaces
+(setq c-basic-offset 2)             ; 2 spaces per tab
+(setq tab-width 2)                  ; tabs are 2 glyphs wide
 
 ;; Delete trailing whitespace on save
 (add-hook 'before-save-hook
-	  (lambda ()
-	    delete-trailing-whitespace))
+          (lambda ()
+            delete-trailing-whitespace))
 
 ;; Don't ask to follow version-control symlinks.  Just do it
 (setq vc-follow-symlinks t)
@@ -117,20 +122,86 @@
   (setq nyan-minimum-window-width 80)
   (nyan-mode))
 
+;; Auto update packages
+;; TODO: Look into this to see if there is a way to defer
+;; TODO: Look into how to set the time between udpates
+(use-package auto-package-update
+  :ensure t
+  :commands (auto-package-update-maybe)
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe)
+  (add-hook 'auto-package-update-before-hook
+            (lambda() (message "Updating packages..."))))
+
+;; origami for code folding
+(use-package origami
+  :ensure t
+  :commands (origami-mode)
+  :bind (:map origami-mode-map
+              ("C-c o :" . origami-recursively-toggle-node)
+              ("C-c o a" . origami-toggle-all-nodes)
+              ("C-c o t" . origami-toggle-node)
+              ("C-c o o" . origami-show-only-node)
+              ("C-c o u" . origami-undo)
+              ("C-c o U" . origami-redo)
+              ("C-c o C-r" . origami-reset)
+              )
+  :config
+  (setq origami-show-fold-header t)
+  (add-to-list 'origami-parser-alist '(python-mode . origami-indent-parser))
+  :init
+  (add-hook 'prog-mode-hook 'origami-mode))
+
+;; rainbow delimeters - color delimeters by depth
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+;; Support for modern c++ (C++14 and such)
+(use-package modern-cpp-font-lock
+  :ensure t
+  :diminish modern-c++-font-lock-mode
+  :config
+  (modern-c++-font-lock-global-mode t))
+
+;; Support for whitespace printing
+(use-package whitespace
+  :ensure t
+  :diminish global-whitespace-mode
+  :config
+  (setq whitespace-style '(lines-tail trailing tabs tab-mark))
+  (global-whitespace-mode t))
+
+;; Handle large files better
+(use-package vlf
+  :ensure t
+  :config
+  (require 'vlf-setup))
+
+(use-package magit
+  :ensure t
+  ; :after (ivy)
+  :commands (magit-checkout)
+  :bind (("M-g M-s" . magit-status)
+         ("M-g M-c" . 'magit-checkout))
+  :init
+  (use-package dash
+    :ensure t)
+  :config
+  (add-hook 'magit-mode-hook (lambda () (setq whitespace-mode -1))))
 
 ;(setq rainbow-file (expand-file-name "rainbow-mode-1.0.1.el" user-emacs-directory))
 ;(if (file-exists-p rainbow-file)
 ;    ((load rainbow-file)
 ;     (require 'rainbow-mode)))
 
-;; Load nyan mode becuase it is fun
-;(require 'nyan-mode)
-;(setq nyan-wavy-trail t)
-;(nyan-mode)
 
 ;; Set speed bar do special-d
 ;(global-set-key (kbd "s-d") 'sr-speedbar-toggle)
 
-;; Finally, load my special fancy modeline
-;(load (expand-file-name "modeline.el" user-emacs-directory))
-
+(setq modeline-file (expand-file-name "modeline.el" user-emacs-directory))
+(if (file-exists-p modeline-file)
+    (load modeline-file))
