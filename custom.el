@@ -7,9 +7,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(git-gutter:update-interval 5)
+ '(nil nil t)
  '(package-selected-packages
    (quote
-    (magit vlf modern-cpp-font-lock rainbow-delimiters origami auto-package-update nyan-mode esup use-package))))
+    (gnu-elpa-keyring-update rainbow-mode git-gutter magit vlf modern-cpp-font-lock rainbow-delimiters origami auto-package-update nyan-mode esup use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

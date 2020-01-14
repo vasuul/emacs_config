@@ -1,3 +1,7 @@
+;; Much of this was taken from
+;;  https://github.com/nilsdeppe/MyEnvironment/blob/master/.emacs.el
+;; and I still need to go through that as there is more there I want to add
+
 ;; Turn off mouse interface early in startup to avoid momentary display
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -24,6 +28,10 @@
 
 (require 'package)
 (package-initialize)
+
+;; Sometimes need this if elpa signature changes and you have to
+;;  download the new kay package
+;(setq package-check-signature nil)
 
 ;; Set up our package locations
 ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -181,6 +189,7 @@
   :config
   (require 'vlf-setup))
 
+;; Better handling of git stuff
 (use-package magit
   :ensure t
   ; :after (ivy)
@@ -193,11 +202,21 @@
   :config
   (add-hook 'magit-mode-hook (lambda () (setq whitespace-mode -1))))
 
-;(setq rainbow-file (expand-file-name "rainbow-mode-1.0.1.el" user-emacs-directory))
-;(if (file-exists-p rainbow-file)
-;    ((load rainbow-file)
-;     (require 'rainbow-mode)))
+;; Track git changes in the gutter
+(use-package git-gutter
+  :ensure t
+  :diminish git-gutter-mode
+  :defer 2
+  :config
+  (global-git-gutter-mode t)
+  (custom-set-variables
+   '(git-gutter:update-interval 5) ; Update every 5 seconds
+   (set-face-foreground 'git-gutter:modified "purple")))
 
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode))
 
 ;; Set speed bar do special-d
 ;(global-set-key (kbd "s-d") 'sr-speedbar-toggle)
