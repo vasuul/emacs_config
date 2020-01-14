@@ -2,6 +2,8 @@
 ;;  https://github.com/nilsdeppe/MyEnvironment/blob/master/.emacs.el
 ;; and I still need to go through that as there is more there I want to add
 
+(setq debug-on-error t)
+
 ;; Turn off mouse interface early in startup to avoid momentary display
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -70,6 +72,7 @@
 (add-hook 'after-init-hook #'(lambda ()
                                (setq gc-cons-threshold 1000000)))
 
+;; Misc convenience settings
 (show-paren-mode t)               ; Highlight matching braces
 (delete-selection-mode t)         ; overwrite the selected section on edit
 (setq column-number-mode t)       ; Show column numbers
@@ -84,13 +87,14 @@
 (setq tab-width 2)                  ; tabs are 2 glyphs wide
 
 ;; Delete trailing whitespace on save
-(add-hook 'before-save-hook
-          (lambda ()
-            delete-trailing-whitespace))
+;(add-hook 'before-save-hook
+;          (lambda ()
+;            delete-trailing-whitespace))
 
 ;; Don't ask to follow version-control symlinks.  Just do it
 (setq vc-follow-symlinks t)
 
+;; Use the use-package package
 (eval-when-compile
   (require 'use-package))
 (use-package use-package
@@ -121,6 +125,14 @@
                        (time-subtract after-init-time before-init-time)))
               gcs-done))))
 
+;; Remove minor modes from the modeline so that it doesn't get cluttered up
+(use-package diminish
+  :ensure t
+  :config
+  (diminish 'abbrev-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'auto-revert-mode))
+
 ;; nyan mode because I like it...
 (use-package nyan-mode
   :ensure t
@@ -131,7 +143,7 @@
   (nyan-mode))
 
 ;; Auto update packages
-;; TODO: Look into this to see if there is a way to defer
+;; TODO: Look into this to see if there is a way to defer updates
 ;; TODO: Look into how to set the time between udpates
 (use-package auto-package-update
   :ensure t
@@ -206,21 +218,37 @@
 (use-package git-gutter
   :ensure t
   :diminish git-gutter-mode
-  :defer 2
   :config
   (global-git-gutter-mode t)
   (custom-set-variables
    '(git-gutter:update-interval 5) ; Update every 5 seconds
-   (set-face-foreground 'git-gutter:modified "purple")))
+   (set-face-background 'git-gutter:added "#282828")
+   (set-face-foreground 'git-gutter:deleted "#FF0080")
+   (set-face-background 'git-gutter:deleted "#282828")
+   (set-face-foreground 'git-gutter:modified "yellow")
+   (set-face-background 'git-gutter:modified "#282828")
+   (set-face-background 'git-gutter:unchanged "#282828")
+   `(git-gutter:unchanged-sign " ")))
 
+;; Rainbow mode displays colors of strings like "green" or "#FF00AB"
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
-;; Set speed bar do special-d
-;(global-set-key (kbd "s-d") 'sr-speedbar-toggle)
+;; I like sr-speedbar more than speedbar
+(use-package sr-speedbar
+  :ensure t
+  :bind (("C-x /" . sr-speedbar-toggle)))
 
+;; Load my mode-line
 (setq modeline-file (expand-file-name "modeline.el" user-emacs-directory))
 (if (file-exists-p modeline-file)
     (load modeline-file))
+
+(setq my-faces-file (expand-file-name "my-faces.el" user-emacs-directory))
+(if (file-exists-p my-faces-file)
+    (load my-faces-file))
+
+
