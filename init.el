@@ -222,6 +222,7 @@
   (global-git-gutter-mode t)
   (custom-set-variables
    '(git-gutter:update-interval 5) ; Update every 5 seconds
+   '(git-gutter:always-show-seperator t)
    (set-face-background 'git-gutter:added "#282828")
    (set-face-foreground 'git-gutter:deleted "#FF0080")
    (set-face-background 'git-gutter:deleted "#282828")
