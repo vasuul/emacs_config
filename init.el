@@ -36,6 +36,7 @@
 ;(setq package-check-signature nil)
 
 ;; Set up our package locations
+;;  opt for melpa over melpa-stable
 ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")))
@@ -132,6 +133,9 @@
   (diminish 'abbrev-mode)
   (diminish 'eldoc-mode)
   (diminish 'auto-revert-mode))
+
+(use-package dts-mode
+  :ensure t)
 
 ;; nyan mode because I like it...
 (use-package nyan-mode
